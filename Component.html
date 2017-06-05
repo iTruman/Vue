@@ -5,9 +5,37 @@
 	<title>注册组件</title>
 </head>
 <body>
-	
+	<div id="example">
+		<div is="my-component"></div>		
+		<div is="child-component"></div>		
+		<div is="component1"></div>		
+		<div is="component1"></div>		
+		<div is="component1"></div>		
+	</div>
 </body>
 <script src="js/vue.js"></script>
 <script>
+	// 注册
+	Vue.component('my-component',{
+		template:'<div>注册组件</div> '
+	});
+	// 局部注册
+	var Child = {
+		template:'<div>局部注册组件</div> '
+	}
+	//组件中data必须是函数
+	Vue.component('component1', {
+	  	template: '<button @click="counter += 1">{{ counter }}</button>',
+	  	data: function () {
+	    		return { counter : 0 };
+	    	}
+	});
+	// 实例化
+	var example = new Vue({
+		el:'#example',
+		components:{
+			'child-component': Child
+		}
+	});
 </script>
 </html>
