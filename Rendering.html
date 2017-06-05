@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>列表渲染</title>
+</head>
+<body>
+	<div id="app">
+		<ul id="example-1">
+			列表渲染
+		  	<li v-for="item in items">
+		    	{{ item.message }}
+		  	</li>
+		</ul>
+		<ul id="example-2">
+			对父作用域属性的完全访问权限
+		  	<li v-for="(item, index) of items">
+		    	{{ parentMessage }} - {{ index }} - {{ item.message }}
+		  	</li>
+		</ul>
+		<ul id="repeat-object" class="demo">
+		  	<li v-for="(value, key, index) in object">
+		    	{{ index }}. {{ key }} : {{ value }} 
+		  	</li>
+		</ul>
+	</div>
+	<div id="todo-list-example">
+	  	<input v-model="newTodoText" v-on:keyup.enter="addNewTodo" placeholder="Add a todo">
+	  		<ul>
+			<li is="todo-item" 
+				v-for="(todo, index) in todos" 
+				v-bind:title="todo" 
+				v-on:remove="todos.splice(index, 1)">
+			</li>
+	  </ul>
+	</div>
+	<!-- 时间处理器 -->
+	<div id="example-3">
+	  	<button v-on:click="say('hi')">Say hi</button>
+	  	<button v-on:click="say('what')">Say what</button>
+	</div>
+	<div id="example-6">
+		<select v-model="selected">
+	  		<option v-for="option in options" v-bind:value="option.value">
+	    	{{ option.text }}
+	  		</option>
+		</select>
+		<span>Selected: {{ selected }}</span>
+	</div>
+	<!-- 当选中时，`picked` 为字符串 "a" -->
+	<input type="radio" v-model="picked" value="a">
+	<!-- `toggle` 为 true 或 false -->
+	<input type="checkbox" v-model="toggle">
+	<!-- 当选中时，`selected` 为字符串 "abc" -->
+	<select v-model="selected">
+	  <option value="abc">ABC</option>
+	</select><br>
+	<!-- 设置输入为数字 -->
+	<input v-model.number="age" type="number"><br>
+	<input v-model.trim="msg">
+</body>
+<script src="js/vue.js"></script>
+<script>
+	var example1 = new Vue({
+	  el: '#example-1',
+	  data: {
+	    items: [
+	      {message: 'Foo' },
+	      {message: 'Bar' }
+	    ]
+	  }
+	});
+	var example2 = new Vue({
+	  el: '#example-2',
+	  data: {
+	    parentMessage: 'Parent',
+	    items: [
+	      { message: 'Foo' },
+	      { message: 'Bar' }
+	    ]
+	  }
+	});
+	var example3 = new Vue({
+	  el: '#repeat-object',
+	  data: {
+	    object: {
+	      FirstName: 'John',
+	      LastName: 'Doe',
+	      Age: 30
+	    }
+	  }
+	});
+	Vue.component('todo-item',{
+		props:['title'],
+		template:'<li>{{ title }}<button v-on:click="$emit(\'remove\')">X</button></li>'
+	});
+	var example4 = new Vue({
+		el:'#todo-list-example',
+		data:{
+			newTodoText:'',
+			todos:['todo 1','todo 2','todo 3']
+		},
+		methods:{
+			addNewTodo:function () {
+				this.todos.push(this.newTodoText);
+				this.newTodoText = '';
+			}
+		}
+	});
+	var example5 = new Vue({
+	  	el: '#example-3',
+	  	methods: {
+	    	say: function (message) {
+	      	alert(message)
+	    	}
+	  	}
+	});
+	var example6 = new Vue({
+	  	el: '#example-6',
+	  	data: {
+	    	selected: 'A',
+	    	options: [
+	      	{ text: 'One', value: 'A' },
+	      	{ text: 'Two', value: 'B' },
+	      	{ text: 'Three', value: 'C' }
+	    	]
+	  	}
+	});
+</script>
+</html>
