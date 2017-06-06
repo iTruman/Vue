@@ -12,6 +12,29 @@
 		<div is="component1"></div>		
 		<div is="component1"></div>		
 	</div>
+	<div id="counter-event-example">
+	  	<p>{{ total }}</p>
+	 		<button-counter @counttotal="incrementTotal"></button-counter>
+	  	<button-counter @counttotal="incrementTotal"></button-counter>
+	</div>
+	<!-- slot -->
+	<div class="container">
+	  <header>
+	    <slot name="header"></slot>
+	  </header>
+	  <main>
+	    <slot></slot>
+	  </main>
+	  <footer>
+	    <slot name="footer"></slot>
+	  </footer>
+	</div>
+	<app-layout>
+	  <h1 slot="header">这里可能是一个页面标题</h1>
+	  <p>主要内容的一个段落。</p>
+	  <p>另一个主要段落。</p>
+	  <p slot="footer">这里有一些联系信息</p>
+	</app-layout>
 </body>
 <script src="js/vue.js"></script>
 <script>
@@ -35,6 +58,30 @@
 		el:'#example',
 		components:{
 			'child-component': Child
+		}
+	});
+	//v-on绑定自定义事件
+	Vue.component('button-counter',{
+		template:'<button @click="increment">{{count}}</button>',
+		data: function() {
+			return { count : 0 }
+		},
+		methods:{
+			increment: function() {
+				this.count += 1;
+				this.$emit('counttotal');//触发increment事件
+			}
+		}
+	});
+	var example1 = new Vue({
+		el:'#counter-event-example',
+		data:{
+			total: 0
+		},
+		methods:{
+			incrementTotal:function () {
+				this.total += 1
+			}
 		}
 	});
 </script>
