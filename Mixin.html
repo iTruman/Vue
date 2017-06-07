@@ -28,6 +28,57 @@
 	  mixins: [myMixin]
 	})
 	var component = new Component() // -> "hello from mixin!"
+	// 混合对象钩子先于组件钩子被调用
+	var mixin = {
+	  created: function () {
+	    console.log('混合对象的钩子被调用')
+	  }
+	};
+	new Vue({
+	  mixins: [mixin],
+	  created: function () {
+	    console.log('组件钩子被调用')
+	  }
+	});
+	// 两个对象键名冲突时，取组件对象的键值对
+	var mixin = {
+	  methods: {
+	    foo: function () {
+	      console.log('foo')
+	    },
+	    conflicting: function () {
+	      console.log('from mixin')
+	    }
+	  }
+	}
+	var vm = new Vue({
+	  mixins: [mixin],
+	  methods: {
+	    bar: function () {
+	      console.log('bar')
+	    },
+	    conflicting: function () {
+	      console.log('from self')
+	    }
+	  }
+	});
 
+	vm.foo() // -> "foo"
+	vm.bar() // -> "bar"
+	vm.conflicting() // -> "from self" 而不是 "from mixin"
+	
+	//全局混合
+	// 为自定义的选项 'myOption' 注入一个处理器。 
+	Vue.mixin({
+	  created: function () {
+	    var myOption = this.$options.myOption
+	    if (myOption) {
+	      console.log(myOption)
+	    }
+	  }
+	});
+	new Vue({
+	  myOption: 'hello!'
+	});
 </script>
 </html>
