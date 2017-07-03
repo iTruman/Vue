@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<div id="app">  
+    <label>1.默认slot</label><br>
+    <children1>  
+        <span>【12345】</span>  
+        <!--上面这行不会显示-->  
+    </children1><br>
+    <label>2.单个slot</label><br>
+    <children2>
+        <span>12345</span>  
+        <!--上面这行不会显示-->  
+    </children2><br>
+    <label>3.具名slot</label><br>
+    <children3>
+        <span slot="first">12345</span>
+        <span slot="second">67890</span>
+    </children3><br>
+    <label>4.分发内容的作用域</label><br>
+    <label>父组件模板的内容在父组件作用域内编译；子组件模板的内容在子组件作用域内编译</label>
+    <children4>
+        <span slot="first" @click="toClick">54321</span>
+        <span slot="second">56789</span>  
+        <!--上面这行不会显示-->  
+    </children4><br>
+    <label>5.没有分发内容的提示</label>
+    <children5>
+        <span slot="first">[1234567890]</span>
+    </children5><br>
+    <label>7.控制子组件根标签的属性</label><br>
+    <button @click="toShow">点击让子组件显示</button>
+    <children6 v-if="abc">  
+    </children6><br>
+    <label>8.通过子组件控制子组件的隐藏与显示</label>
+    <button @click="show">点击显示子组件</button>
+    <children7>
+        
+    </children7> 
+</div>  
+
+</body>
+<script src="js/vue.js"></script>
+<script>  
+    var vm = new Vue({  
+        el: '#app',  
+        data: {
+            abc: false
+        },
+        methods: {
+            toClick: function () {
+                alert("It is the parents' method .")
+            },
+            toShow: function () {
+                this.abc = !this.abc;
+            },
+            show: function () {
+                this.$children[5].tohidden = true;
+            }
+        },
+        components: {  
+            children1: {    //这个无返回值，不会继续派发  
+                template: "<button>为了明确作用范围，所以使用button标签</button>"  
+            },
+            children2: {    //这个无返回值，不会继续派发 
+                template: "<button><slot></slot>为了明确作用范围，所以使用button标签</button>"  
+            },
+            children3: {
+                template: "<button><slot name='first'></slot>为了明确作用范围，<slot name='second'></slot>所以使用button标签</button>"  
+            },
+            children4: {
+                template: "<button>点击<slot name='first'></slot>时才会alert，<slot name='second'></slot>,button其他部分不行</button>"  
+            },
+            children5: {
+                template: "<div><slot name='first'><button>【如果没有内容则显示我1】</button></slot>为了明确作用范围，<slot name='last'><button>【如果没有内容则显示我2】</button></slot>所以使用button标签</div>"
+            },
+            children6: {
+                template: "<div>这里是子组件</div>"
+            },
+            children7: {
+                template: "<div v-if='tohidden' @click='hide'>这里是子组件</div>", 
+                data: function () {
+                    return {
+                        tohidden: true
+                    }
+                },
+                methods: {
+                    hide: function () {
+                        this.tohidden = !this.tohidden;
+                    }
+                }
+            }
+        }  
+    });  
+</script>    
+</script>  
+</html>
